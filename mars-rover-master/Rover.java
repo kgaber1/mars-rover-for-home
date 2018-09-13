@@ -36,14 +36,14 @@ public class Rover
     public void rotate(int rotation)
     {
        dir = dir + rotation;
-    if (dir >= 8); {
-        dir = 0;
+    if (dir >= 7); {
+        dir = dir % 8 + 0; 
     }
+    
     if (dir <= -1); {
-        dir = 8;
-    }
-       
-       System.out.println(name + "is facing" + rotation);
+        dir = dir % 8 + 0;
+    }      
+       System.out.println(name + " is facing " + rotation);
 }
     
 private String getDirectionName() {
@@ -91,7 +91,7 @@ return direction;
                 x = x - moveDistance;
             }
             
-            System.out.println(this.name + " moved forward" + moveDistance + "units");
+            System.out.println(this.name + " moved forward " + moveDistance + " units");
         }
         else {
             System.out.println(this.name + " can't move. It's ded.");
@@ -107,6 +107,6 @@ return direction;
     
     public String toString() {
         return "Rover[name=" + name + ",x=" + x + ",y=" + y + 
-               ",dir=" + dir + ",isAlive=" + isAlive + "]";
+               " dir=" + dir +  " ,is facing= " + getDirectionName() + ",isAlive=" + isAlive + "]";
     }
 }

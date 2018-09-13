@@ -29,7 +29,7 @@ public class Runner
         System.out.println(r1);
         System.out.println(r2);
         
-        r1.move();        
+        r1.move(4);        
         System.out.println(r1);
     }
 }
