@@ -14,11 +14,15 @@ public class Rover
     private String name;
     private boolean isAlive;
     private String direction;
+    private int energy;
+    private int numPics;
     public Rover(String name)
     {
         this.x = 0;
         this.y = 0;
         this.dir = 0;
+        this.energy = 100;
+        this.numPics = 0;
         this.name = name;
         this.isAlive = true;
     }
@@ -37,11 +41,11 @@ public class Rover
     {
        dir = dir + rotation;
     if (dir >= 7); {
-        dir = dir % 8 + 0; 
+        dir = dir % 8; 
     }
     
     if (dir <= -1); {
-        dir = dir % 8 + 0;
+        dir = dir % 8;
     }      
        System.out.println(name + " is facing " + rotation);
 }
@@ -98,6 +102,18 @@ return direction;
         }
     }
     
+    public void energypad()
+    {
+        if (x == 0 && y == 0);
+        energy = 100;
+    }
+    
+    public void numPics()
+    {
+        
+        
+    }
+    
     public void kill(Rover other) {
         System.out.println(this.name + " shoots " + other.name + " with space lasers.");
         System.out.println(other.name + " goes 'beep beep aaaaaaakkkkkk!' and dies");
@@ -107,6 +123,6 @@ return direction;
     
     public String toString() {
         return "Rover[name=" + name + ",x=" + x + ",y=" + y + 
-               " dir=" + dir +  " ,is facing= " + getDirectionName() + ",isAlive=" + isAlive + "]";
+               " dir=" + dir +  ",is facing= " + getDirectionName() + ",isAlive=" + isAlive + "]";
     }
 }
