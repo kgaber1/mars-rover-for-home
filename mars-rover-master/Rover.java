@@ -36,22 +36,20 @@ public class Rover
         this.isAlive = true;
     }
 
-    
     public void rotate(int rotation)
-    {
+{
        dir = dir + rotation;
-    if (dir >= 7); {
-        dir = dir % 8; 
+    if (dir >= 8) {
+        dir = (dir % 8); 
     }
-    
-    if (dir <= -1); {
-        dir = dir % 8;
+     else if (dir < 0); {
+        dir = 8 - (Math.abs(dir) % 8);
     }      
        System.out.println(name + " is facing " + rotation);
 }
     
 private String getDirectionName() {
- if (dir == 0) {
+    if (dir == 0) {
     direction = "North";
 }
  else if (dir == 1) {
@@ -84,22 +82,43 @@ return direction;
             if (dir == 0) {
                 y = y + moveDistance;
             }
-            else if (dir == 1) {
+                else if (dir == 1) {
                 x = x + moveDistance;
+                y = y + moveDistance;
             }
             else if (dir == 2) {
-                y = y - moveDistance;
+                x = x + moveDistance;
             }
-            
-            else {
+            else if (dir == 3) {
+                y = y - moveDistance;
                 x = x - moveDistance;
             }
-            
+            else if (dir == 4) {
+                y = y - moveDistance;
+            }
+            else if (dir == 5) {
+                y = y - moveDistance;
+                x = x + moveDistance;
+            }
+            else if (dir == 6) {
+                y = x - moveDistance;
+            }
+            else if (dir == 7) {
+                y = y + moveDistance;
+                x = x - moveDistance;
+            }
             System.out.println(this.name + " moved forward " + moveDistance + " units");
         }
         else {
             System.out.println(this.name + " can't move. It's ded.");
         }
+    }
+    
+     public void moveTo(int x, int y) {
+            rotate(-this.dir);
+            move(y - this.y);
+            rotate(2);
+            move(x - this.x);
     }
     
     public void energypad()
