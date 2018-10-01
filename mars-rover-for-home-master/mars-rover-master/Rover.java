@@ -9,53 +9,61 @@ public class Rover
 {
     // instance variables
     private int x;
+    private int homeY;
+    private int homeX;
     private int y;
     private int dir;
     private String name;
     private boolean isAlive;
-    private String direction;
     private int energy;
     private int numPics = 0;
     private boolean hasPower = true;
     private int maxPics = 10;
     private int health;
-    private int damage;
+
+    
+    /** the function creates a rover
+     * @param name  name of the rover being created
+     */
     public Rover(String name) // name of rovers and their intital stats
     {
         this.x = 0;
         this.y = 0;
         this.dir = 0;
         this.energy = 100;
-        this.health = 100;
-        this.damage = 10;
+        this.health = 100; 
         this.numPics = 0;
         this.name = name;
         this.isAlive = true;
     }
     
+    /** the function creates a rover
+     * @param name  name of the rover being created
+     */
     public Rover(String name, int x, int y, int dir) // name of rovers and their intital stats
     {
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
         this.dir = dir;
         this.name = name;
         this.energy = 100;
         this.health = 100;
-        this.damage = 10;
         this.numPics = 0;
         this.isAlive = true;
     }
 
      
-    /** the program checks to see if the rover is alive and had energy and then turns the rover in whichever direction is inputted. param 
-     * @param dir tells the direction of the rover 
-     * @param rotation gives the direction value of the rover to turn int direction.
+    /** the program checks to see if the rover is alive and had energy and then turns the rover in whichever direction is inputted. 
+     * @param  rotation dir tells the direction of the rover 
+     * @param  rotation gives the direction value of the rover to turn int direction.
      */
-    public void rotate(int rotation) { 
-        if(hasPower){
+    public void rotate(int rotation) {
+        int energyRequired = 5;
+        
+        if(energy >= energyRequired){
             if(isAlive) {
                 this.dir += rotation;
-                spendEnergy();
+                spendEnergy(energyRequired);
                 if (this.dir >= 8) {
                     this.dir = (dir % 8);
                     System.out.println(name + " turned to the right " + Math.abs(rotation) + " to face " + getDirectionName() + "."); 
@@ -73,11 +81,12 @@ public class Rover
     }  
     
     /** this function allows the rover to consume energy doing tasks.
-     * @param energy allows the rover to do a certain amount of commands before recharging
-     * @param hasPower gives the rover the condition if he has energy he can do tasks
+     * @param  energy  allows the rover to do a certain amount of commands before recharging
+     * @param  hasPower  gives the rover the condition if he has energy he can do tasks
+     * @param spendEnergy  consumes energy to do tasks
      */
-        public void spendEnergy() { 
-        energy -= 5;
+    public void spendEnergy(int amount) { 
+        energy -= amount;
         if (energy <= 0) {
             energy = 0;
             hasPower = false;
@@ -88,12 +97,12 @@ public class Rover
      * directionArray are the cardinal directions allowed in the rover.
      */
     private String getDirectionName() { 
-          String[] directionArray = {"North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest"};
+        String[] directionArray = {"North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest"};
         return directionArray[this.dir];
     }
 
     /** these are the formulas to move in the 8 cardinal directions 0 being north 7 being north east
-     * @param moveDistance is the distance inputed added to the corresponding direction to give a position of x and y.
+     * moveDistance is the distance inputed added to the corresponding direction to give a position of x and y.
      */
     public void move(int moveDistance) 
     {
@@ -101,7 +110,7 @@ public class Rover
             if (dir == 0) {
                 y = y + moveDistance;
             }
-                else if (dir == 1) {
+            else if (dir == 1) {
                 x = x + moveDistance;
                 y = y + moveDistance;
             }
@@ -127,126 +136,140 @@ public class Rover
                 x = x - moveDistance;
           
             }
+            
             System.out.println(name + " moved " + moveDistance + " units in direction " + getDirectionName() + ".");
         }
     }
     
     /** this function takes an integer and rotates the rover to move to the given point as efficiently as possible
-     * @param moveTo is the function which takes the x and y coordinate and moves the rover as efficiently as possible to the desired x and y value.
+     * moveTo is the function which takes the x and y coordinate and moves the rover as efficiently as possible to the desired x and y value (even if it means driving backwards).
      */
      public void moveTo(int x, int y) { 
             rotate(-this.dir);
             move(y - this.y);
             rotate(2);
             move(x - this.x);
+            System.out.println( name + " has reached their destination ");
     }
     
     /** this function initiates the rover to take the most efficient way back home using the moveTo function above.
-     * @param moveTo is the function which takes the x and y coordinate and moves the rover as efficiently as possible to the desired x and y value.
-     * @param goHome makes the rover efficiently move to the coordinate (0,0)
+     * moveTo is the function which takes the x and y coordinate and moves the rover as efficiently as possible to the desired x and y value.
+     * goHome makes the rover efficiently move to the coordinate (0,0)
      */
     public void goHome() { 
-        moveTo(0, 0);
+        moveTo(homeX, homeY);
         System.out.println(name + " went home ");
     }
     
-    
     /** this function allows the robot to teleport anywhere as long as it had energy and is alive.
-     * @param teleport this function takes an x and a y coordinate and uses the robots energy to take it to the destination.
+     * teleport this function takes an x and a y coordinate and uses the robots energy to take it to the destination.
      */
     public void teleport (int x, int y) { 
-        spendEnergy();
-        if(hasPower) {
+         int energyRequired = (2*(x + y));
+        if((energy >= energyRequired)) {
             if(isAlive) {
                 this.x = x;
                 this.y = y;
                 System.out.println(name + " has teleported to " + x + ", " + y + ".");
-                spendEnergy();
+                spendEnergy(2*(x + y));
             } else {
                 System.out.println (name + " cannot teleport while dead!");    
             }
-        } else System.out.println(this.name + " has no power!");
-    }
-    
-    /** this function allows the robot to charge the energy of the robot to 100%
-     * @param amps - the amount of charge given to the rover up to 100%.
-     */
-        public void charge(int amps) { 
-        if (!(energy > 100 && !((amps + energy) > 100))) {
-            energy += amps;
-            System.out.println(name + " is charging for " + amps + " power!");
         } else {
-            System.out.println(name + " cannot charge past their limit of ");
+            System.out.println(this.name + " has no power!");
         }
     }
     
+    /** this function allows the robot to charge the energy of the robot to 100%
+     * amps - the amount of charge given to the rover up to 100%.
+     */
+        public void charge(int amps) { 
+       if (isAlive) {
+          if (((energy < 100) && ((amps + energy) < 100))) {
+            amps -= Math.abs(energy);
+            energy += Math.abs(amps);
+            
+            System.out.println(name + " is charging for " + amps + " power!");
+         } 
+         else {
+            System.out.println(name + " cannot charge past their limit of 100, " + name + " is charging to max power!");
+            energy = 100;
+          }
+       }
+    }
+    
      /** this function allows the rover to take a selfie in his current spot and the direction he is facing.
-     * @param Numpics - the amount of pictures you can take.
-     * @param maxPics - the maximum amount of pictures the rover can hold.
+     * Numpics - the amount of pictures you can take.
+     * maxPics - the maximum amount of pictures the rover can hold.
+     * getDirectionName() -  prints out the direction the rover is facing.
      */
        public void takePicture() { 
         if(hasPower) {
             if(isAlive) {
                 if (numPics <= maxPics) {
-                this.numPics++;
-                System.out.println(name + " took a selfie at " + "[" + x + ", " + y + "] facing " + getDirectionName() + ".");
-                } else  System.out.println(name + " has taken wayyy to many selfies!");
+                    this.numPics++;
+                    System.out.println(name + " took a selfie at " + "[" + x + ", " + y + "] facing " + getDirectionName() + ".");
+                } else {
+                    System.out.println(name + " has taken wayyy to many selfies!");
+                }
             } else {
                 System.out.println(name + " is dead!");
             }
-    }
+        }
     }
     
     /** this function allows the rover to transmit his pictures back to earth.
-     * @param transmitPictures - resets the numPics to 0 and send the photos to earth.
+     * transmitPictures - resets the numPics to 0 and send the photos to earth.
      */
       public void transmitPictures() { 
-        this.numPics = 0;
-        System.out.println(name + "'s" + " photos have been sent to earth!");
+        System.out.println(name + "'s " +  numPics + " selfies have been sent to earth!");
+         this.numPics = 0;
     }
     
      /** this function removes the other rover and makes the robot dead.
-     * @param isAlive - is alive is the condition of the rover if he is alive or not 
+     * isAlive - is alive is the condition of the rover if he is alive or not 
      */
     public void kill(Rover other) {
-        System.out.println(this.name + " shoots " + other.name + " with space lasers.");
-        System.out.println(other.name + " goes 'beep beep aaaaaaakkkkkk!' and dies");
+        System.out.println(this.name + " finishes " + other.name + " with long sticks.");
+        System.out.println(other.name + " goes 'beep beep aaaaaaakkkkkk!' and explodes");
         
         other.isAlive = false;
     }
     
-    /** this function allows rovers to fight other robots while spending energy to do so, the initial rover will deal 10 damage to the other rover 
-     * @param attack - allows the rover to hit the other rover for -10 and diminishes it from the other rovers health at the cost of energy.
+    /** this function allows rovers to fight other robots while spending energy to do so, the initial rover will deal a random damage value to the other rover 
+     *  attack - allows the rover to hit the other rover for -10 and diminishes it from the other rovers health at the cost of energy.
      */
     public void attack(Rover other) { 
-        spendEnergy();
+        
+         int energyRequired = (2*(x + y));
         if(hasPower) {
-            if(this.isAlive && other.isAlive == false) {
-                System.out.println(this.name + " tried to kill " + other.name + ", but it is already dead.");
+            int damage = ((int)(15*Math.random()));
+            if(this.isAlive == true && other.isAlive == false) {
+                System.out.println(this.name + " tried to kill " + other.name + ", but the rover is already dead.");
             } else if (isAlive) {
-                spendEnergy();
-                other.health -= this.damage;
+                
+                 ;
+                other.health -= damage;
                 System.out.println(this.name + " has attacked " + other.name + " for " + damage + 
                 " damage.\n >" + other.name + " current health: " + other.health);
                 checkHealth();
                 other.checkHealth();
-                
             }
             else {
-                other.health-= this.damage;
+                other.health-= damage;
                 System.out.println(this.name + " has killed " + other.name + " from beyond the grave!");
             }
         } else System.out.println(this.name + " has no power!");
     }
     
     /** this function allows the rover to check if the rover has died
-     * @param isAlive - does not let the rover do any more commands because it is not alive
+     * isAlive - does not let the rover do any more commands because it is not alive
      */
     public void checkHealth() { 
         if (this.health <= 0) {
            this.health = 0;
            this.isAlive = false; 
-           System.out.println(name + " has died!");
+           System.out.println(name + " has died! ");
         }
     }
     

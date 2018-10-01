@@ -10,7 +10,8 @@ public class Runner
     public static void main(String[] args) {
         Rover r1 = new Rover("Jevin");  
         Rover r2 = new Rover("Kevin");  
-        Rover r3 = new Rover("Elevan");
+        Rover r3 = new Rover("Eleven");
+        Rover rIver = new Rover("Reverend Revin Bevin");
         
         System.out.println(r1);
         System.out.println(r2);
@@ -46,18 +47,29 @@ public class Runner
         r2.attack(r3);
         r2.attack(r3);
         r2.attack(r3);
+        System.out.println(r2);
         r2.charge(100);
+        r2.checkHealth();
         System.out.println(r2);
-        r2.moveTo(5, 10);
+        r2.moveTo(-7, 3);
         System.out.println(r2);
+        
         
         r3.move(3);
         r3.attack(r2);
         System.out.println(r3);
         r1.teleport(0,0);
-        r1.moveTo(-3,4);
+        r1.moveTo(-7,4);
         System.out.println(r1);
         r1.goHome();
+        r1.takePicture();
         System.out.println(r1);
+        r1.charge(500);
+        System.out.println(r1);
+        
+        r2.attack(r3);
+        r2.kill(r3);
+        r2.attack(r3);
+        rIver.takePicture();
     }
 }
